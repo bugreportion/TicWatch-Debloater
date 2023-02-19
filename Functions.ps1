@@ -104,3 +104,14 @@ function Get-PackagesToUninstall {
 
     return $packagesToUninstall
 }
+
+function Remove-Packages {
+    param (
+        [Parameter(Mandatory)]
+        [array]$Packages
+    )
+    $Packages | ForEach-Object {
+        .$Env:adb shell pm uninstall --user 0 $PSItem
+
+    }
+}
