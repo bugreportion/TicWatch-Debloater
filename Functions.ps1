@@ -112,6 +112,5 @@ function Remove-Packages {
     )
     $Packages | ForEach-Object {
         .$Env:adb shell pm uninstall --user 0 $PSItem
-
     }
 }
