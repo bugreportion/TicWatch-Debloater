@@ -4,8 +4,6 @@
 
 <a href="https://yoomoney.ru/to/4100116615568835"><img src="https://yoomoney.ru/i/shop/iomoney_logo_color_example.png" width=220px height=46px></a>
 
-## Copy folder to local drive
-
 ## How-to
 
 * Run.
