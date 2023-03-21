@@ -2,11 +2,11 @@
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		Name="Window"
-		MinHeight="400" MinWidth="415"
-		SizeToContent="Width" WindowStartupLocation="CenterScreen"
+		Title = "Choose apps to uninstall"
+		MinWidth="350"
+		SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
 		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
-		FontFamily="Candara" FontSize="16" ShowInTaskbar="True"
-		Background="#F1F1F1" Foreground="#262626">
+		FontFamily="SegoeUI" FontSize="16" ShowInTaskbar="True">
 		<Window.Resources>
 			<Style TargetType="StackPanel">
 				<Setter Property="Orientation" Value="Horizontal"/>
@@ -27,7 +27,7 @@
 			<Style TargetType="Border">
 				<Setter Property="Grid.Row" Value="1"/>
 				<Setter Property="CornerRadius" Value="0"/>
-				<Setter Property="BorderThickness" Value="0, 1, 0, 1"/>
+				<Setter Property="BorderThickness" Value="0, 0, 0, 0"/>
 				<Setter Property="BorderBrush" Value="#000000"/>
 			</Style>
 			<Style TargetType="ScrollViewer">

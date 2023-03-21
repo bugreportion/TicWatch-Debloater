@@ -194,7 +194,6 @@ function RemoveDialog {
         $CheckBox.Add_Click({ CheckBoxClick })
     }
 
-    $Window.Title = "Choose apps to uninstall"
     $ButtonUninstall.Content = "Uninstall"
     $TextBlockSelectAll.Text = "Select all"
     $ButtonUninstall.Add_Click({ ButtonUninstallClick })
@@ -203,7 +202,6 @@ function RemoveDialog {
     $Window.Add_Loaded({ $Window.Activate() })
     $Form.ShowDialog() | Out-Null
 }
-
 
 function Remove-Packages {
     param (
