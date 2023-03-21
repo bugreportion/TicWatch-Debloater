@@ -194,8 +194,6 @@ function RemoveDialog {
         $CheckBox.Add_Click({ CheckBoxClick })
     }
 
-    $ButtonUninstall.Content = "Uninstall"
-    $TextBlockSelectAll.Text = "Select all"
     $ButtonUninstall.Add_Click({ ButtonUninstallClick })
     $CheckBoxSelectAll.Add_Click({ CheckBoxSelectAllClick })
 
