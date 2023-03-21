@@ -6,17 +6,6 @@
 
 ## Copy folder to local drive
 
-```cmd
-# /storage/emulated/0
-# /sdcard
-
-# Check the whole filesystem
-adb shell ls /data
-
-adb pull /storage/3039-3538/dcim/camera D:\folder
-adb pull sdcard/DCIM/Camera D:\folder
-```
-
 ## How-to
 
 * Run.
