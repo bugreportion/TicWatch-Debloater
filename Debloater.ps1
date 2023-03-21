@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 #Requires -Version 5.1
 
 #region Preparations
