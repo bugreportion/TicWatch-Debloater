@@ -1,5 +1,4 @@
 #Requires -Version 5.1
-
 function Get-PlatformTools {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -113,7 +112,7 @@ function RemoveDialog {
     Add-Type -AssemblyName PresentationFramework
     [System.Collections.ArrayList]$PackagesToRemove = @()
     
-    [xml]$XAML = Get-Content -Path "$PSScriptRoot\XAML" -Raw
+    [xml]$XAML = Get-Content -Path "$PSScriptRoot\XAML.xml"
     $Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
     $Form = [Windows.Markup.XamlReader]::Load($Reader)
     $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
