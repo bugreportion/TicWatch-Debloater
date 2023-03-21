@@ -80,26 +80,26 @@ function Get-PackagesToUninstall {
         [Parameter(Mandatory)]
         [array]$List
     )
-    [System.Collections.ArrayList]$packagesToUninstall = @()
-    foreach ($app in $List) {
-        $Packages | ForEach-Object {
-            if ($PSItem -in $app.Package) {
-                $packagesToUninstall += @{
-                    Name    = $app.Name
-                    Package = [System.Collections.ArrayList]@($PSItem)
-                }
-            }
-        }
-    }
 
-    # Merge multiple packages from one app into one hashtable
-    for ($i = 0; $i -lt ($packagesToUninstall.Count - 1); $i++) {
-        for ($j = $i++; $j -lt ($packagesToUninstall.Count - 1); $j++) {
-            if ($packagesToUninstall[$i].Name -eq $packagesToUninstall[$j].Name) {
-                $packagesToUninstall[$i].Package.Add($packagesToUninstall[$j].Package)
-                $packagesToUninstall.RemoveAt($j)
+    $i = 0
+    $packagesToUninstall = @()
+
+    foreach ($app in $List) {
+        $found = $false
+
+        foreach ($package in $Packages) {
+            if ($package -in $app.Package) {
+                $found = $true
+                if ( -not ($packagesToUninstall[$i]) ) {
+                    $packagesToUninstall += @{}
+                    $packagesToUninstall[$i].Package = @()
+                }
+                $packagesToUninstall[$i].Name = $app.Name
+                $packagesToUninstall[$i].Package += $package
             }
         }
+
+        if ($found) { $i++ }
     }
 
     return $packagesToUninstall
