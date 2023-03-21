@@ -41,6 +41,6 @@ $Parameters = @{
     Packages = Get-InstalledPackages
     List     = Get-Content -Path $PSScriptRoot\Uninstall-List.json -Raw | ConvertFrom-Json
 }
-Get-PackagesToUninstall @Parameters
+RemoveDialog (Get-PackagesToUninstall @Parameters)
 
 Stop-Adb

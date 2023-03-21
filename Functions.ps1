@@ -105,6 +105,106 @@ function Get-PackagesToUninstall {
     return $packagesToUninstall
 }
 
+function RemoveDialog {
+    param (
+        [Parameter(Mandatory)]
+        [array]$Packages
+    )
+
+    Add-Type -AssemblyName PresentationFramework
+    [System.Collections.ArrayList]$PackagesToRemove = @()
+    
+    [xml]$XAML = Get-Content -Path "$PSScriptRoot\XAML" -Raw
+    $Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
+    $Form = [Windows.Markup.XamlReader]::Load($Reader)
+    $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
+        Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
+    }
+
+    function ButtonUninstallSetIsEnabled {
+        if ($PackagesToRemove.Count -gt 0) {
+            $ButtonUninstall.IsEnabled = $true
+        }
+        else {
+            $ButtonUninstall.IsEnabled = $false
+        }
+    }
+
+    function CheckBoxClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRemove.Add($CheckBox.Tag) | Out-Null
+        }
+        else {
+            $PackagesToRemove.Remove($CheckBox.Tag)
+        }
+
+        ButtonUninstallSetIsEnabled
+    }
+
+    function CheckBoxSelectAllClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRemove.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $true
+                    foreach ($tag in $Item.Tag) {
+                        $PackagesToRemove.Add($tag)
+                    }
+                }
+            }
+        }
+        else {
+            $PackagesToRemove.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $false
+                }
+            }
+        }
+
+        ButtonUninstallSetIsEnabled
+    }
+
+    function ButtonUninstallClick {
+        Write-Host -Object "Please wait..."
+        $Window.Close() | Out-Null
+        Remove-Packages $PackagesToRemove
+    }
+
+    foreach ($Package in $Packages) {
+        $CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
+        $CheckBox.Tag = $Package.Package
+
+        $TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
+        $TextBlock.Text = $Package.Name
+
+        $StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
+        $StackPanel.Children.Add($CheckBox) | Out-Null
+        $StackPanel.Children.Add($TextBlock) | Out-Null
+
+        $PanelContainer.Children.Add($StackPanel) | Out-Null
+
+        $CheckBox.IsChecked = $false
+        $CheckBox.Add_Click({ CheckBoxClick })
+    }
+
+    $Window.Title = "Choose apps to uninstall"
+    $ButtonUninstall.Content = "Uninstall"
+    $TextBlockSelectAll.Text = "Select all"
+    $ButtonUninstall.Add_Click({ ButtonUninstallClick })
+    $CheckBoxSelectAll.Add_Click({ CheckBoxSelectAllClick })
+
+    $Window.Add_Loaded({ $Window.Activate() })
+    $Form.ShowDialog() | Out-Null
+}
+
+
 function Remove-Packages {
     param (
         [Parameter(Mandatory)]
@@ -112,5 +212,6 @@ function Remove-Packages {
     )
     $Packages | ForEach-Object {
         .$Env:adb shell pm uninstall --user 0 $PSItem
+        Write-Verbose -Message "Uninstalled $PSItem" -Verbose
     }
 }
