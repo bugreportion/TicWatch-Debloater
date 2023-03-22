@@ -1,4 +1,21 @@
 #Requires -Version 5.1
+
+function Test-PlatformTools {
+    $adbInPATH = Get-Command -Name adb -ErrorAction SilentlyContinue
+    $adbFromDebloater = Test-Path -Path "$PSScriptRoot\platform-tools\adb.exe" -PathType Leaf
+    
+    if ($adbInPATH) {
+        $Env:adb = (Get-Command -Name adb).Source
+        return $true
+    }
+    elseif ($adbFromDebloater) {
+        $Env:adb = "$PSScriptRoot\platform-tools\adb.exe"
+        return $true
+    }
+    else {
+        return $false
+    }
+}
 function Get-PlatformTools {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -16,16 +33,9 @@ function Get-PlatformTools {
     }
     Expand-Archive @Parameters
 
-    Remove-Item -Path "$PSScriptRoot\platform-tools.zip" -Force
-}
-
-function Start-Adb {
     $Env:adb = "$PSScriptRoot\platform-tools\adb.exe"
-    .$Env:adb start-server
-}
 
-function Stop-Adb {
-    .$Env:adb kill-server
+    Remove-Item -Path "$PSScriptRoot\platform-tools.zip" -Force
 }
 
 function Test-AdbConnection {

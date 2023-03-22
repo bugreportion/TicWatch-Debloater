@@ -5,9 +5,11 @@ $ErrorActionPreference = "Stop"
 Remove-Module -Name Functions -ErrorAction SilentlyContinue
 Import-Module -Name $PSScriptRoot\Functions.ps1
 
-Get-PlatformTools
+if ( -not (Test-PlatformTools) ) {
+    Get-PlatformTools 
+}
 
-Start-Adb
+.$Env:adb start-server
 
 do {
     $connectionStatus = Test-AdbConnection
@@ -40,4 +42,4 @@ $Parameters = @{
 }
 RemoveDialog -Packages (Get-PackagesToUninstall @Parameters)
 
-Stop-Adb
+.$Env:adb kill-server
