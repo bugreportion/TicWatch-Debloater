@@ -38,6 +38,6 @@ $Parameters = @{
     Packages = Get-InstalledPackages
     List     = Get-Content -Path $PSScriptRoot\Bloatware.json -Raw | ConvertFrom-Json
 }
-RemoveDialog (Get-PackagesToUninstall @Parameters)
+RemoveDialog -Packages (Get-PackagesToUninstall @Parameters)
 
 Stop-Adb
