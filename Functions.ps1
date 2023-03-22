@@ -112,7 +112,7 @@ function RemoveDialog {
     Add-Type -AssemblyName PresentationFramework
     [System.Collections.ArrayList]$PackagesToRemove = @()
     
-    [xml]$XAML = Get-Content -Path "$PSScriptRoot\XAML.xml"
+    [xml]$XAML = Get-Content -Path "$PSScriptRoot\RemoveDialogWindow.xml"
     $Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
     $Form = [Windows.Markup.XamlReader]::Load($Reader)
     $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {

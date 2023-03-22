@@ -36,7 +36,7 @@ do {
 
 $Parameters = @{
     Packages = Get-InstalledPackages
-    List     = Get-Content -Path $PSScriptRoot\Uninstall-List.json -Raw | ConvertFrom-Json
+    List     = Get-Content -Path $PSScriptRoot\Bloatware.json -Raw | ConvertFrom-Json
 }
 RemoveDialog (Get-PackagesToUninstall @Parameters)
 
