@@ -1,0 +1,273 @@
+﻿[
+  {
+    "Name": {
+      "en": "TicHealth",
+      "ru": "Tic здоровье"
+    },
+    "Packages": [
+      "com.mobvoi.wear.health.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicCoach",
+      "ru": "Tic упражнение"
+    },
+    "Packages": [
+      "com.mobvoi.wear.fitness.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicPulse",
+      "ru": "Tic пульс"
+    },
+    "Packages": [
+      "com.mobvoi.wear.heartrate.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicSleep",
+      "ru": "Tic сон"
+    },
+    "Packages": [
+      "com.mobvoi.wear.sleep.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicOxygen",
+      "ru": "Tic кислород"
+    },
+    "Packages": [
+      "com.mobvoi.wear.bloodoxygen"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicZen",
+      "ru": "Tic дзен"
+    },
+    "Packages": [
+      "com.mobvoi.wear.pressure"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicBreating",
+      "ru": "Tic дыхание"
+    },
+    "Packages": [
+      "com.mobvoi.wear.breath"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicHearing",
+      "ru": "Tic шум"
+    },
+    "Packages": [
+      "com.mobvoi.ticwear.noisedetect"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicCare"
+    },
+    "Packages": [
+      "com.mobvoi.care"
+    ]
+  },
+  {
+    "Name": {
+      "en": "VoiceMemo",
+      "ru": "Tic запись"
+    },
+    "Packages": [
+      "com.mobvoi.wear.recorder"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Calculator",
+      "ru": "Калькулятор"
+    },
+    "Packages": [
+      "com.mobvoi.wear.calculator.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Essential mode"
+    },
+    "Packages": [
+      "com.mobvoi.wear.mcuservice.aw",
+      "com.mobvoi.wear.overlay.mcuservice"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Mobvoi Privacy",
+      "ru": "Конфиденциальность"
+    },
+    "Packages": [
+      "com.mobvoi.wear.privacy.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Mobvoi Account (Login)",
+      "ru": "Авторизация в аккаунте Movboi"
+    },
+    "Packages": [
+      "com.mobvoi.wear.privacy.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Mobvoi Watchfaces",
+      "ru": "Циферблаты от Mobvoi"
+    },
+    "Packages": [
+      "com.mobvoi.wear.watchface.aw",
+      "com.mobvoi.mwf.magicfaces"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicCompation (used to pair watch with Mobvoi phone app)",
+      "ru": "TicCompation (cоединение с приложением Mobvoi)"
+    },
+    "Packages": [
+      "com.mobvoi.wear.recorder"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicSystem (charging animation)",
+      "ru": "TicSystem (aнимация зарядки)"
+    },
+    "Packages": [
+      "com.mobvoi.wear.system.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "TicLauncher",
+      "ru": "Домашний экран"
+    },
+    "Packages": [
+      "com.mobvoi.wear.launcher.aw"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Other useless preinstalled packages",
+      "ru": "Остальные бесполезные пакеты"
+    },
+    "Packages": [
+      "com.mobvoi.ticwatch.jupiter.home",
+      "com.google.android.wearable.overlay.home.mobvoi.tiles",
+      "com.mobvoi.wear.appsservice"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Google Fit (Fit Heart Rate, Fit Goals, Workouts, Fit Breathing)",
+      "ru": "Google Fit (Пульс в Fit, Цели в Fit, Тренировки, Fit Дыхание)"
+    },
+    "Packages": [
+      "com.google.android.apps.fitness"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Flashlight",
+      "ru": "Фонарик"
+    },
+    "Packages": [
+      "com.google.android.clockwork.flashlight"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Google Camera",
+      "ru": "Google Камера"
+    },
+    "Packages": [
+      "com.google.android.GoogleCamera"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Reminders and Tasks",
+      "ru": "Напоминания и Дела"
+    },
+    "Packages": [
+      "com.google.android.wearable.reminders"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Google Pay or Wallet",
+      "ru": "Google Pay или Кошелек"
+    },
+    "Packages": [
+      "com.google.android.apps.walletnfcrel"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Gboard"
+    },
+    "Packages": [
+      "com.google.android.inputmethod.latin"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Google Maps",
+      "ru": "Google Карты"
+    },
+    "Packages": [
+      "com.google.android.apps.maps"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Google Assistant",
+      "ru": "Google Ассистент"
+    },
+    "Packages": [
+      "com.google.android.wearable.assistant"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Phone (Dialer) and Contacts",
+      "ru": "Телефон и Контакты"
+    },
+    "Packages": [
+      "com.google.android.apps.wearable.phone"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Handwriting",
+      "ru": "Рукописный ввод"
+    },
+    "Packages": [
+      "com.google.android.apps.handwriting.ime"
+    ]
+  },
+  {
+    "Name": {
+      "en": "Stopwatch, Timer, Handwashing timer, Alarms",
+      "ru": "Секундомер, Таймер, Таймер для мытья рук, Будильник"
+    },
+    "Packages": [
+      "com.google.android.deskclock"
+    ]
+  }
+]

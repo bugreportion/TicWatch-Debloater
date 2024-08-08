@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "redhat.vscode-xml",
+    "ms-vscode.powershell",
+    "editorconfig.editorconfig",
+    "davidanson.vscode-markdownlint"
+  ]
+}
