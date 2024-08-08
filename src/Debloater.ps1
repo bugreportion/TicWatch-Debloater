@@ -74,6 +74,12 @@ $Parameters = @{
   Packages      = if ($chosenDialog -eq 'remove') { Get-InstalledPackages } else { Get-DisabledPackages }
   BloatwareList = Get-Content -Path $BloatwareList -Raw | ConvertFrom-Json
 }
+if (!($Parameters.Packages)) {
+  Write-Host -Object $Localization.NoPackagesFound -ForegroundColor 'Yellow'
+  Stop-Adb
+  Pause
+  return
+}
 Show-Dialog -Apps (Get-AppsToProcess @Parameters) -Type $chosenDialog
 
 #endregion
