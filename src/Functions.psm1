@@ -201,7 +201,7 @@ function Disable-Packages {
     [array]$Packages
   )
   $Packages | ForEach-Object -Process {
-    .$Env:adb shell pm disable --user 0 $PSItem
+    .$Env:adb shell pm disable-user --user 0 $PSItem
     Write-Verbose -Message "Disabled $PSItem"
   }
 }
