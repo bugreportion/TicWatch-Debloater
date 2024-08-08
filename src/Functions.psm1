@@ -404,7 +404,7 @@ function Set-MicaBackdrop {
         do {
           hwnd = FindWindow(null, lpWindowName);
           Thread.Sleep(35);
-        } while (hwnd == 0);
+        } while (hwnd.ToInt32() == 0);
     
         int micaBackdrop = 2;
         DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
