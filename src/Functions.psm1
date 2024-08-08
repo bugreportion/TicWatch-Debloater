@@ -235,7 +235,7 @@ function Show-Dialog {
   begin {
     Add-Type -AssemblyName 'PresentationFramework'
     [System.Collections.ArrayList]$packagesToProcess = @()
-    $dialog = if ($Type -eq 'remove') { $RemoveDialog } else { $RestoreDialog }
+    $dialog = if ($Type -eq 'remove') { $RemoveDialog } else { $EnableDialog }
   }
   process {
     [xml]$xaml = Get-Content -Path $dialog

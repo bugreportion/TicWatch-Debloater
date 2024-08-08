@@ -9,4 +9,4 @@ $BloatwareList = "$Resources/Bloatware.json"
 
 $DialogWindows = "$Resources/Windows"
 $RemoveDialog = "$DialogWindows/RemoveDialog.xml"
-$RestoreDialog = "$DialogWindows/RestoreDialog.xml"
+$EnableDialog = "$DialogWindows/EnableDialog.xml"
