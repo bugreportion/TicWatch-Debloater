@@ -119,7 +119,7 @@ function Get-InstalledPackages {
   [OutputType([array])]
   param()
   process {
-    .$Env:adb shell pm list packages | ForEach-Object -Process {
+    .$Env:adb shell pm list packages -e | ForEach-Object -Process {
       $PSItem.Replace('package:', '')
     }
   }
