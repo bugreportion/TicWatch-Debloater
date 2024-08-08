@@ -365,7 +365,7 @@ function Show-Dialog {
 
     Set-MicaBackdrop -WindowName $Window.Title
     $Window.Add_Loaded({ $Window.Activate() })
-    $Form.ShowDialog() | Out-Null
+    $form.ShowDialog() | Out-Null
   }
 }
 
@@ -375,52 +375,53 @@ function Set-MicaBackdrop {
     [Parameter(Mandatory)]
     [string]$WindowName
   )
-  process {
-    $scriptBlock = {
-      Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-using System.Threading;
+  begin {
+    Add-Type -TypeDefinition @'
+    using System;
+    using System.Threading;
+    using System.Runtime.InteropServices;
+    
+    public class DWM {
+      [DllImport("dwmapi.dll")]
+      private static extern int DwmSetWindowAttribute(
+        IntPtr hwnd,
+        uint dwAttribute,
+        ref int pvAttribute,
+        uint cbAttribute
+      );
 
-public class Window {
-  [DllImport("user32.dll")]
-  public static extern IntPtr FindWindow(
-    string lpClassName,
-    string lpWindowName
-  );
-
-  [DllImport("dwmapi.dll")]
-  public static extern int DwmSetWindowAttribute(
-    IntPtr hWnd,
-    uint dwAttribute,
-    ref int pvAttribute,
-    uint cbAttribute
-  );
-
-  public static void SetMicaBackdrop(int darkMode, string lpWindowName) {
-    IntPtr hwnd;
-    do {
-      hwnd = FindWindow(null, lpWindowName);
-      Thread.Sleep(35);
-    } while (hwnd == 0);
-
-    int micaBackdrop = 2;
-    DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
-    DwmSetWindowAttribute(hwnd, 20, ref darkMode, sizeof(int));
-  }
-}
-'@
-
-      $Parameters = @{
-        Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
-        Name = 'AppsUseLightTheme'
+      [DllImport("user32.dll")]
+      private static extern IntPtr FindWindow(
+        string lpClassName,
+        string lpWindowName
+      );
+    
+      private static void _SetMicaBackdrop(string lpWindowName, int useDarkMode) {
+        IntPtr hwnd;
+        do {
+          hwnd = FindWindow(null, lpWindowName);
+          Thread.Sleep(35);
+        } while (hwnd == 0);
+    
+        int micaBackdrop = 2;
+        DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
+        DwmSetWindowAttribute(hwnd, 20, ref useDarkMode, sizeof(int));
       }
-      $useDarkMode = (Get-ItemPropertyValue @Parameters) -bxor 1
-      [Window]::SetMicaBackdrop($useDarkMode, $using:WindowName)
-    }
 
-    Start-Job -ScriptBlock $scriptBlock | Out-Null
-    Start-Sleep -Seconds 1
+      public static void SetMicaBackdrop(string lpWindowName, int useDarkMode) {
+        Thread thread = new Thread(() => DWM._SetMicaBackdrop(lpWindowName, useDarkMode));
+        thread.Start();
+      }
+    }
+'@
+  }
+  process {
+    $Parameters = @{
+      Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+      Name = 'AppsUseLightTheme'
+    }
+    $useDarkMode = (Get-ItemPropertyValue @Parameters) -bxor 1
+    [DWM]::SetMicaBackdrop($WindowName, $useDarkMode)
   }
 }
 
