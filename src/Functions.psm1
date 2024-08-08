@@ -3,24 +3,6 @@ $ErrorActionPreference = 'Stop'
 
 ."$PSScriptRoot/Paths.ps1"
 
-#region Utils
-
-function Test-File {
-  [CmdletBinding()]
-  [OutputType([bool])]
-  param (
-    [Parameter(Mandatory, ValueFromPipeline)]
-    [AllowNull()]
-    [AllowEmptyString()]
-    [string]$Path
-  )
-  process {
-    [bool](Test-Path -Path $Path -PathType 'Leaf' -ErrorAction 'SilentlyContinue')
-  }
-}
-
-#endregion
-
 #region Platform-Tools
 
 function Set-PlatformTools {
@@ -34,7 +16,12 @@ function Set-PlatformTools {
     }
    
     $Env:adb = $AdbFromResources
-    if (-not (Test-File -Path $AdbFromResources)) {
+
+    $Parameters = @{
+      Path     = $AdbFromResources
+      PathType = 'Leaf'
+    }
+    if (-not (Test-Path @Parameters -ErrorAction 'SilentlyContinue')) {
       Get-PlatformTools
     }
   }
@@ -255,6 +242,7 @@ function Show-Dialog {
       Set-Variable -Name ($PSItem.Name) -Value $form.FindName($PSItem.Name)
     }
 
+    $Window.Title = $Localization.ChooseApps
     $SelectAllCheckBox.Content = $Localization.SelectAll
     $ActionButton.Content = $Localization.$Action
 
@@ -376,8 +364,64 @@ function Show-Dialog {
       }
     }
 
+    Set-MicaBackdrop -WindowName $Window.Title
     $Window.Add_Loaded({ $Window.Activate() })
     $Form.ShowDialog() | Out-Null
+  }
+}
+
+function Set-MicaBackdrop {
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory)]
+    [string]$WindowName
+  )
+  process {
+    $scriptBlock = {
+      Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+public class Window {
+  [DllImport("user32.dll")]
+  public static extern IntPtr FindWindow(
+    string lpClassName,
+    string lpWindowName
+  );
+
+  [DllImport("dwmapi.dll")]
+  public static extern int DwmSetWindowAttribute(
+    IntPtr hWnd,
+    uint dwAttribute,
+    ref int pvAttribute,
+    uint cbAttribute
+  );
+
+  public static void SetMicaBackdrop(int darkMode, string lpWindowName) {
+    IntPtr hwnd;
+    do {
+      hwnd = FindWindow(null, lpWindowName);
+      Thread.Sleep(35);
+    } while (hwnd == 0);
+
+    int micaBackdrop = 2;
+    DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
+    DwmSetWindowAttribute(hwnd, 20, ref darkMode, sizeof(int));
+  }
+}
+'@
+
+      $Parameters = @{
+        Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+        Name = 'AppsUseLightTheme'
+      }
+      $useDarkMode = (Get-ItemPropertyValue @Parameters) -bxor 1
+      [Window]::SetMicaBackdrop($useDarkMode, $using:WindowName)
+    }
+
+    Start-Job -ScriptBlock $scriptBlock | Out-Null
+    Start-Sleep -Seconds 1
   }
 }
 

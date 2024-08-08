@@ -8,23 +8,39 @@
   MinWidth="350"
   SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display"
   FontFamily="SegoeUI" FontSize="16"
+  Background="Transparent"
   ShowInTaskbar="True">
+  <WindowChrome.WindowChrome>
+    <WindowChrome
+      CaptionHeight="20"
+      ResizeBorderThickness="8"
+      CornerRadius="0"
+      GlassFrameThickness="-1"
+      UseAeroCaptionButtons="True" />
+  </WindowChrome.WindowChrome>
   <Window.Resources>
     <Style TargetType="StackPanel">
       <Setter Property="Orientation" Value="Horizontal" />
       <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
     <Style TargetType="CheckBox">
-      <Setter Property="Margin" Value="10, 13, 10, 10" />
+      <Setter Property="Margin" Value="20, 13, 20, 10" />
       <Setter Property="IsChecked" Value="True" />
-    </Style>
-    <Style TargetType="TextBlock">
-      <Setter Property="Margin" Value="0, 10, 10, 10" />
+      <Style.Resources>
+        <Style TargetType="Border">
+          <Setter Property="CornerRadius" Value="3" />
+        </Style>
+      </Style.Resources>
     </Style>
     <Style TargetType="Button">
       <Setter Property="Margin" Value="20" />
       <Setter Property="Padding" Value="10" />
       <Setter Property="IsEnabled" Value="False" />
+      <Style.Resources>
+        <Style TargetType="Border">
+          <Setter Property="CornerRadius" Value="5" />
+        </Style>
+      </Style.Resources>
     </Style>
     <Style TargetType="Border">
       <Setter Property="Grid.Row" Value="1" />
@@ -49,7 +65,7 @@
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
-      <StackPanel Name="PanelSelectAll" Grid.Column="0" HorizontalAlignment="Left">
+      <StackPanel Name="PanelSelectAll" Grid.Column="0" HorizontalAlignment="Left" Margin="0 25 0 0">
         <CheckBox Name="SelectAllCheckBox" Content="" IsChecked="False" />
       </StackPanel>
     </Grid>

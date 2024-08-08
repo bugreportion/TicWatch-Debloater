@@ -14,8 +14,9 @@ EnablePackages          = Enable previously disabled apps
 
 NoPackagesFound = No packages found!
 
-SelectAll = Select all
-Uninstall = Uninstall
-Disable   = Disable
-Enable    = Enable
+ChooseApps = Choose apps
+SelectAll  = Select all
+Uninstall  = Uninstall
+Disable    = Disable
+Enable     = Enable
 '@
