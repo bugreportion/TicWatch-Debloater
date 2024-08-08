@@ -7,6 +7,4 @@ $AdbFromResources = "$PlatformTools/adb.exe"
 
 $BloatwareList = "$Resources/Bloatware.json"
 
-$DialogWindows = "$Resources/Windows"
-$RemoveDialog = "$DialogWindows/RemoveDialog.xml"
-$EnableDialog = "$DialogWindows/EnableDialog.xml"
+$DialogWindow = "$Resources/DialogWindow.xml"

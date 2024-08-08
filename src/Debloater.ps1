@@ -60,18 +60,32 @@ $choice = $Host.UI.PromptForChoice(
   '',
   $Localization.ChooseActionDialogTitle,
   (
-    "&1 $($Localization.RemovePackages)",
-    "&2 $($Localization.RestorePackages)"
+    "&1 $($Localization.UninstallPackages)",
+    "&2 $($Localization.DisablePackages)",
+    "&3 $($Localization.EnablePackages)"
   ),
   0
 )
 switch ($choice) {
-  0 { $chosenDialog = 'remove' }
-  1 { $chosenDialog = 'restore' }
+  0 {
+    $chosenAction = 'uninstall'
+    $packages = Get-InstalledPackages
+    break
+  }
+  1 {
+    $chosenAction = 'disable'
+    $packages = Get-EnabledPackages
+    break
+  }
+  2 {
+    $chosenAction = 'enable'
+    $packages = Get-DisabledPackages
+    break
+  }
 }
 
 $Parameters = @{
-  Packages      = if ($chosenDialog -eq 'remove') { Get-InstalledPackages } else { Get-DisabledPackages }
+  Packages      = $packages
   BloatwareList = Get-Content -Path $BloatwareList -Raw | ConvertFrom-Json
 }
 if (!($Parameters.Packages)) {
@@ -80,7 +94,7 @@ if (!($Parameters.Packages)) {
   Pause
   return
 }
-Show-Dialog -Apps (Get-AppsToProcess @Parameters) -Type $chosenDialog
+Show-Dialog -Apps (Get-AppsToProcess @Parameters) -Action $chosenAction
 
 #endregion
 

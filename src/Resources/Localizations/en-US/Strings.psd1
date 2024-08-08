@@ -8,9 +8,11 @@ MultipleDevicesConnected             = You have connected multiple devices.
 MultipleDevicesConnectedInstructions = Please disconnect unnecessary ones.
 
 ChooseActionDialogTitle = What do you want to do?
-RemovePackages          = Uninstall/disable apps
-RestorePackages         = Enable previously disabled apps
-NoPackagesFound         = No packages found!
+UninstallPackages       = Uninstall apps
+DisablePackages         = Disable apps
+EnablePackages          = Enable previously disabled apps
+
+NoPackagesFound = No packages found!
 
 SelectAll = Select all
 Uninstall = Uninstall

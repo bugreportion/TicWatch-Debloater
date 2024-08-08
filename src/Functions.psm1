@@ -119,6 +119,17 @@ function Get-InstalledPackages {
   [OutputType([array])]
   param()
   process {
+    .$Env:adb shell pm list packages | ForEach-Object -Process {
+      $PSItem.Replace('package:', '')
+    }
+  }
+}
+
+function Get-EnabledPackages {
+  [CmdletBinding()]
+  [OutputType([array])]
+  param()
+  process {
     .$Env:adb shell pm list packages -e | ForEach-Object -Process {
       $PSItem.Replace('package:', '')
     }
@@ -229,16 +240,15 @@ function Show-Dialog {
     [array]$Apps,
 
     [Parameter(Mandatory)]
-    [ValidateSet('remove', 'restore')]
-    [string]$Type
+    [ValidateSet('uninstall', 'disable', 'enable')]
+    [string]$Action
   )
   begin {
     Add-Type -AssemblyName 'PresentationFramework'
     [System.Collections.ArrayList]$packagesToProcess = @()
-    $dialog = if ($Type -eq 'remove') { $RemoveDialog } else { $EnableDialog }
   }
   process {
-    [xml]$xaml = Get-Content -Path $dialog
+    [xml]$xaml = Get-Content -Path $DialogWindow
     $reader = (New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $xaml)
     $form = [Windows.Markup.XamlReader]::Load($reader)
     $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
@@ -246,36 +256,13 @@ function Show-Dialog {
     }
 
     $SelectAllCheckBox.Content = $Localization.SelectAll
-    if ($Type -eq 'remove') {
-      $UninstallButton.Content = $Localization.Uninstall
-      $DisableButton.Content = $Localization.Disable
-    }
-    else {
-      $EnableButton.Content = $Localization.Enable
-    }
+    $ActionButton.Content = $Localization.$Action
 
-    function Set-ButtonsEnabledState {
+    function Set-ActionButtonState {
       [CmdletBinding()]
       param()
       process {
-        if ($packagesToProcess.Count -gt 0) {
-          if ($Type -eq 'remove') {
-            $UninstallButton.IsEnabled = $true
-            $DisableButton.IsEnabled = $true
-          }
-          else {
-            $EnableButton.IsEnabled = $true
-          }
-        }
-        else {
-          if ($Type -eq 'remove') {
-            $UninstallButton.IsEnabled = $false
-            $DisableButton.IsEnabled = $false
-          }
-          else {
-            $EnableButton.IsEnabled = $false
-          }
-        }
+        $ActionButton.IsEnabled = $packagesToProcess.Count -gt 0
       }
     }
 
@@ -294,7 +281,7 @@ function Show-Dialog {
         }
       }
       end {
-        Set-ButtonsEnabledState
+        Set-ActionButtonState
       }
     }
 
@@ -328,7 +315,7 @@ function Show-Dialog {
         }
       }
       end {
-        Set-ButtonsEnabledState
+        Set-ActionButtonState
       }
     }
 
@@ -374,12 +361,19 @@ function Show-Dialog {
     }
 
     $SelectAllCheckBox.Add_Click({ OnSelectAllClick })
-    if ($Type -eq 'remove') {
-      $UninstallButton.Add_Click({ OnUninstallButtonClick })
-      $DisableButton.Add_Click({ OnDisableButtonClick })
-    }
-    else {
-      $EnableButton.Add_Click({ OnEnableButtonClick })
+    switch -Exact ($Action) {
+      'uninstall' {
+        $ActionButton.Add_Click({ OnUninstallButtonClick })
+        break
+      }
+      'disable' {
+        $ActionButton.Add_Click({ OnDisableButtonClick })
+        break
+      }
+      'enable' {
+        $ActionButton.Add_Click({ OnEnableButtonClick })
+        break
+      }
     }
 
     $Window.Add_Loaded({ $Window.Activate() })
