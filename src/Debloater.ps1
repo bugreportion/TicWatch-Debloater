@@ -39,6 +39,12 @@ do {
       Pause
       break
     }
+    'offline' {
+      Write-Host -Object $Localization.DeviceOffline -ForegroundColor 'Red'
+      Write-Host -Object $Localization.DeviceOfflineInstructions
+      Pause
+      break
+    }
     'disconnected' {
       Write-Host -Object $Localization.DeviceDisconnected -ForegroundColor 'Red'
       Write-Host -Object $Localization.DeviceDisconnectedInstructions

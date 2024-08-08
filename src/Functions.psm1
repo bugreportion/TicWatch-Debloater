@@ -89,7 +89,10 @@ function Test-AdbConnection {
         return 'connected'
       }
       { $PSItem -match 'unauthorized' } {
-        return $PSItem
+        return 'unauthorized'
+      }
+      { $PSItem -match 'offline' } {
+        return 'offline'
       }
       { $PSItem -eq '' } {
         return 'disconnected'
