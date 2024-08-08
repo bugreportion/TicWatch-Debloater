@@ -242,7 +242,6 @@ function Show-Dialog {
       Set-Variable -Name ($PSItem.Name) -Value $form.FindName($PSItem.Name)
     }
 
-    $Window.Title = $Localization.ChooseApps
     $SelectAllCheckBox.Content = $Localization.SelectAll
     $ActionButton.Content = $Localization.$Action
 
