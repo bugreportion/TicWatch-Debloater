@@ -3,6 +3,7 @@
     "redhat.vscode-xml",
     "ms-vscode.powershell",
     "editorconfig.editorconfig",
-    "davidanson.vscode-markdownlint"
+    "davidanson.vscode-markdownlint",
+    "tylerleonhardt.vscode-inline-values-powershell"
   ]
 }

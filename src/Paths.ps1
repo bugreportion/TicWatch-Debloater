@@ -7,4 +7,7 @@ $AdbFromResources = "$PlatformTools/adb.exe"
 
 $BloatwareList = "$Resources/Bloatware.json"
 
-$DialogWindow = "$Resources/DialogWindow.xml"
+$XAMLFiles = "$Resources/XAML"
+$DialogWindow = "$XAMLFiles/DialogWindow.xml"
+$DarkStyles = "$XAMLFiles/DarkStyles.xml"
+$LightStyles = "$XAMLFiles/LightStyles.xml"

@@ -240,9 +240,9 @@ function Show-Dialog {
   process {
     [xml]$xaml = Get-Content -Path $DialogWindow
     $reader = (New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $xaml)
-    $form = [Windows.Markup.XamlReader]::Load($reader)
+    $mainWindow = [Windows.Markup.XamlReader]::Load($reader)
     $xaml.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-      Set-Variable -Name ($PSItem.Name) -Value $form.FindName($PSItem.Name)
+      Set-Variable -Name ($PSItem.Name) -Value $mainWindow.FindName($PSItem.Name)
     }
 
     $SelectAllCheckBox.Content = $Localization.SelectAll
@@ -340,6 +340,7 @@ function Show-Dialog {
       $CheckBox = New-Object -TypeName 'System.Windows.Controls.CheckBox'
       $CheckBox.Content = $app.Name
       $CheckBox.Tag = $app.Packages
+      $CheckBox.Style = $mainWindow.FindResource('FluentCheckBox')
 
       $StackPanel = New-Object -TypeName 'System.Windows.Controls.StackPanel'
       $StackPanel.Children.Add($CheckBox) | Out-Null
@@ -366,9 +367,23 @@ function Show-Dialog {
       }
     }
 
-    Set-MicaBackdrop -WindowName $Window.Title
+    $systemTheme = Get-SystemTheme
+    $accentVariant = if ($systemTheme -eq 'dark') { 'light' } else { 'dark' }
+    $accentColor = Get-SystemAccentColor -Variant $accentVariant
+
+    $targetStyles = if ($systemTheme -eq 'dark') { $DarkStyles } else { $LightStyles }
+    [xml]$styles = Get-Content -Path $targetStyles
+    $styles.ResourceDictionary.SolidColorBrush[0].Color = "#$accentColor"
+    $reader = (New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $styles)
+    $mainWindow.Resources.MergedDictionaries.Add([Windows.Markup.XamlReader]::Load($reader))
+
+    if (Test-DwmwBackdropApiAvailability) {
+      $Window.FontFamily = 'SegoeUI Variable'
+      $mainWindow.FontFamily = 'SegoeUI Variable'
+      Set-MicaBackdrop -WindowName $Window.Title
+    }
     $Window.Add_Loaded({ $Window.Activate() })
-    $form.ShowDialog() | Out-Null
+    $mainWindow.ShowDialog() | Out-Null
   }
 }
 
@@ -403,7 +418,7 @@ public class DWM {
     IntPtr hwnd;
     do {
       hwnd = FindWindow(null, lpWindowName);
-      Thread.Sleep(35);
+      Thread.Sleep(25);
     } while (hwnd.ToInt32() == 0);
 
     int micaBackdrop = 2;
@@ -419,12 +434,72 @@ public class DWM {
 '@
   }
   process {
+    $useDarkMode = if ((Get-SystemTheme) -eq 'dark') { 1 } else { 0 }
+    [DWM]::SetMicaBackdrop($WindowName, $useDarkMode)
+  }
+}
+
+#endregion
+
+#region System 
+
+function Get-SystemTheme {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param ()
+  begin {
     $Parameters = @{
       Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
-      Name = 'AppsUseLightTheme'
+      Name = 'SystemUsesLightTheme'
     }
-    $useDarkMode = (Get-ItemPropertyValue @Parameters) -bxor 1
-    [DWM]::SetMicaBackdrop($WindowName, $useDarkMode)
+  }
+  process {
+    switch (Get-ItemPropertyValue @Parameters) {
+      0 { return 'dark' }
+      1 { return 'light' }
+      Default { throw 'Cannot determine the apps theme' }
+    }
+  }
+}
+
+function Get-SystemAccentColor {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory)]
+    [ValidateSet('light', 'dark')]
+    [string]$Variant
+  )
+  begin {
+    $Parameters = @{
+      Path = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent'
+      Name = 'AccentPalette'
+    }
+  }
+  process {
+    $accentPalette = Get-ItemPropertyValue @Parameters
+
+    $accentColor = if ($Variant -eq 'light') {
+      $accentPalette[4..6]
+    }
+    else {
+      $accentPalette[16..18]
+    }
+
+    -join ($accentColor | ForEach-Object { 
+        $channel = '{0:X}' -f $PSItem
+        if ($channel.Length -eq 1) { $channel = "0$channel" }
+        $channel
+      })
+  }
+}
+
+function Test-DwmwBackdropApiAvailability {
+  [CmdletBinding()]
+  [OutputType([bool])]
+  param()
+  process {
+    [System.Environment]::OSVersion.Version.Build -ge 22523
   }
 }
 
