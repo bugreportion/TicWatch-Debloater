@@ -14,7 +14,7 @@ function Set-PlatformTools {
       $Env:adb = $adbFromPATH
       return
     }
-   
+
     $Env:adb = $AdbFromResources
 
     $Parameters = @{
@@ -79,7 +79,7 @@ function Test-AdbConnection {
   param()
   process {
     $devices = .$Env:adb devices
- 
+
     if ($devices.Length -gt 3) {
       return 'multiple'
     }
@@ -380,42 +380,42 @@ function Set-MicaBackdrop {
   )
   begin {
     Add-Type -TypeDefinition @'
-    using System;
-    using System.Threading;
-    using System.Runtime.InteropServices;
-    
-    public class DWM {
-      [DllImport("dwmapi.dll")]
-      private static extern int DwmSetWindowAttribute(
-        IntPtr hwnd,
-        uint dwAttribute,
-        ref int pvAttribute,
-        uint cbAttribute
-      );
+using System;
+using System.Threading;
+using System.Runtime.InteropServices;
+   
+public class DWM {
+  [DllImport("dwmapi.dll")]
+  private static extern int DwmSetWindowAttribute(
+    IntPtr hwnd,
+    uint dwAttribute,
+    ref int pvAttribute,
+    uint cbAttribute
+  );
 
-      [DllImport("user32.dll")]
-      private static extern IntPtr FindWindow(
-        string lpClassName,
-        string lpWindowName
-      );
-    
-      private static void _SetMicaBackdrop(string lpWindowName, int useDarkMode) {
-        IntPtr hwnd;
-        do {
-          hwnd = FindWindow(null, lpWindowName);
-          Thread.Sleep(35);
-        } while (hwnd.ToInt32() == 0);
-    
-        int micaBackdrop = 2;
-        DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
-        DwmSetWindowAttribute(hwnd, 20, ref useDarkMode, sizeof(int));
-      }
+  [DllImport("user32.dll")]
+  private static extern IntPtr FindWindow(
+    string lpClassName,
+    string lpWindowName
+  );
+   
+  private static void _SetMicaBackdrop(string lpWindowName, int useDarkMode) {
+    IntPtr hwnd;
+    do {
+      hwnd = FindWindow(null, lpWindowName);
+      Thread.Sleep(35);
+    } while (hwnd.ToInt32() == 0);
 
-      public static void SetMicaBackdrop(string lpWindowName, int useDarkMode) {
-        Thread thread = new Thread(() => DWM._SetMicaBackdrop(lpWindowName, useDarkMode));
-        thread.Start();
-      }
-    }
+    int micaBackdrop = 2;
+    DwmSetWindowAttribute(hwnd, 38, ref micaBackdrop, sizeof(int));
+    DwmSetWindowAttribute(hwnd, 20, ref useDarkMode, sizeof(int));
+  }
+
+  public static void SetMicaBackdrop(string lpWindowName, int useDarkMode) {
+    Thread thread = new Thread(() => DWM._SetMicaBackdrop(lpWindowName, useDarkMode));
+    thread.Start();
+  }
+}
 '@
   }
   process {
